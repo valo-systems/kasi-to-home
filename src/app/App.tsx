@@ -1,0 +1,1187 @@
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import {
+  Phone, MessageCircle, Menu, X, Shield, Heart, Users, Check,
+  ChevronDown, Mail, Clock, ExternalLink, Star, Home, Leaf,
+  FileText, ArrowRight,
+} from "lucide-react";
+import * as Accordion from "@radix-ui/react-accordion";
+import logoImg from "@/assets/logo-circle-transparent-tight.png";
+import atlehangLogoImg from "@/assets/atlehanglife-logo.png";
+
+// ─── Brand constants ──────────────────────────────────────────────────────────
+const GOLD = "#C9A44C";
+const GOLD_RICH = "#A87B24";
+const CREAM = "#F7F1E5";
+const BLACK = "#070707";
+const EMERALD = "#061F1C";
+const NAVY = "#07111F";
+
+// ─── Data ────────────────────────────────────────────────────────────────────
+
+interface CoverAmount { label: string; amount: string; }
+interface FuneralPlan {
+  name: string; premium: number; coverPeople: string; includes: string;
+  ageBand: string; benefits: string[]; coverAmounts: CoverAmount[];
+  highlight?: boolean;
+}
+
+const funeralPlans: FuneralPlan[] = [
+  {
+    name: "Excel Plan", premium: 167, coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: ["Flatlid coffin", "Hearse and 1 family car", "Tent and 50 chairs", "1 toilet", "2 tables", "Vegetables", "A2 photo"],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R15,000" },
+      { label: "Children 14–21 years", amount: "R15,000" },
+      { label: "Children 6–13 years", amount: "R7,500" },
+      { label: "Children 1–5 years", amount: "R3,750" },
+      { label: "Stillborn to 11 months", amount: "R1,875" },
+    ],
+  },
+  {
+    name: "Delta Plan", premium: 210, coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: ["Open face square casket", "Hearse and 2 family cars", "Tent and 50 chairs", "1 toilet", "2 tables", "Groceries and vegetables", "A2 photo", "Headstone"],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R20,000" },
+      { label: "Children 14–21 years", amount: "R20,000" },
+      { label: "Children 6–13 years", amount: "R10,000" },
+      { label: "Children 1–5 years", amount: "R5,000" },
+      { label: "Stillborn to 11 months", amount: "R2,500" },
+    ],
+  },
+  {
+    name: "Classic Plan", premium: 291, coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: ["Kiaat Mini Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "Headstone", "Grave marker", "1× flowers"],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R30,000" },
+      { label: "Children 14–21 years", amount: "R30,000" },
+      { label: "Children 6–13 years", amount: "R15,000" },
+      { label: "Children 1–5 years", amount: "R7,500" },
+      { label: "Stillborn to 11 months", amount: "R3,750" },
+    ],
+  },
+  {
+    name: "Blue Plan", premium: 470, coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    highlight: true,
+    benefits: ["Kiaat Standard Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "Headstone", "Grave marker", "2× flowers"],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R50,000" },
+      { label: "Children 14–21 years", amount: "R50,000" },
+      { label: "Children 6–13 years", amount: "R25,000" },
+      { label: "Children 1–5 years", amount: "R12,500" },
+      { label: "Stillborn to 11 months", amount: "R6,250" },
+    ],
+  },
+];
+
+const contactInfo = {
+  owner: "Sibusiso Moolar",
+  ownerPhone: "+27762327358",
+  ownerPhoneDisplay: "+27 76 232 7358",
+  businessPhone: "+27782613861",
+  businessPhoneDisplay: "+27 78 261 3861",
+  email: "sibusiso.moolar@kasitohomefunerals.co.za",
+  registration: "2026/254458/07",
+  hours: "9:00 AM – 5:00 PM",
+  whatsapp: "https://wa.me/27782613861?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20funeral%20cover%20from%20Kasi%20to%20Home%20Funeral%20Services.",
+};
+
+const trustItems = [
+  { icon: Users, text: "Family funeral cover plans" },
+  { icon: Heart, text: "Dignified funeral support" },
+  { icon: Shield, text: "Underwritten by Atlehang Life" },
+  { icon: Star, text: "From R167 per month" },
+];
+
+const coverOptions = [
+  "Main Member Only",
+  "Main Member & Spouse",
+  "Main Member & Children (up to 6)",
+  "Main Member, Spouse & Children (up to 6)",
+  "Extended Family",
+];
+
+const policyItems = [
+  {
+    title: "Waiting Periods",
+    content: [
+      "6 months waiting period for natural causes.",
+      "No waiting period for accidental death, provided the first premium has been received.",
+      "Waiting period may not apply for takeover schemes, subject to proof of previous cover and waiting period served.",
+      "If cover is increased during a takeover, a waiting period may apply to the difference.",
+    ],
+  },
+  {
+    title: "Claims",
+    content: ["Claims must be notified within six months after the event."],
+  },
+  {
+    title: "Cancellations",
+    content: ["Policies can be cancelled with one month's notice."],
+  },
+  {
+    title: "General Exclusions",
+    content: [
+      "Suicide within the first 12 months of the policy.",
+      "Death caused by unlawful activities.",
+      "Abortions.",
+      "Illegal immigrants.",
+    ],
+  },
+  {
+    title: "Disclaimer",
+    content: [
+      "All benefits, premiums, waiting periods, exclusions, and cover amounts are subject to the official policy wording and underwriter approval. Please confirm all details with Kasi to Home Funeral Services before joining.",
+    ],
+  },
+];
+
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+
+function fadeUp(delay = 0) {
+  return {
+    initial: { opacity: 0, y: 28 },
+    whileInView: { opacity: 1, y: 0 },
+    viewport: { once: true, margin: "-60px" },
+    transition: { duration: 0.65, delay, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
+  };
+}
+
+function GoldLine() {
+  return (
+    <div className="flex items-center gap-3 mb-6">
+      <div className="h-px w-10" style={{ background: GOLD }} />
+      <div className="w-1 h-1 rounded-full" style={{ background: GOLD }} />
+      <div className="h-px w-10" style={{ background: GOLD }} />
+    </div>
+  );
+}
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <GoldLine />
+      <p className="text-xs uppercase tracking-[0.2em] mb-4" style={{ color: GOLD }}>{children}</p>
+    </div>
+  );
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+
+const navLinks = [
+  { label: "Home", href: "#home" },
+  { label: "About", href: "#about" },
+  { label: "Plans", href: "#plans" },
+  { label: "Benefits", href: "#benefits" },
+  { label: "Underwriter", href: "#underwriter" },
+  { label: "Contact", href: "#contact" },
+];
+
+function Header() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <header
+      className="fixed top-0 left-0 right-0 z-50 transition-all duration-300"
+      style={{
+        background: scrolled ? "rgba(7,7,7,0.97)" : "rgba(7,7,7,0.7)",
+        borderBottom: scrolled ? `1px solid rgba(201,164,76,0.2)` : "none",
+        backdropFilter: "blur(12px)",
+      }}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-6">
+        {/* Logo */}
+        <a href="#home" className="flex items-center gap-3 shrink-0">
+          <img src={logoImg} alt="Kasi to Home logo" className="w-8 h-8 rounded object-cover" />
+          <span className="hidden sm:block text-sm font-medium tracking-wide" style={{ color: CREAM }}>
+            Kasi to Home
+          </span>
+        </a>
+
+        {/* Desktop nav */}
+        <nav className="hidden lg:flex items-center gap-8">
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-sm transition-colors duration-200 hover:text-white"
+              style={{ color: "rgba(247,241,229,0.65)" }}
+            >
+              {l.label}
+            </a>
+          ))}
+        </nav>
+
+        {/* CTA */}
+        <div className="flex items-center gap-3">
+          <a
+            href={contactInfo.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="hidden sm:flex items-center gap-2 px-4 py-2 rounded text-sm font-medium transition-all duration-200 hover:brightness-110"
+            style={{ background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+          >
+            <MessageCircle size={14} />
+            WhatsApp Us
+          </a>
+          <button
+            className="lg:hidden p-2 rounded"
+            style={{ color: CREAM }}
+            onClick={() => setOpen(!open)}
+            aria-label="Toggle menu"
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile menu */}
+      {open && (
+        <div
+          className="lg:hidden border-t px-5 py-6 flex flex-col gap-4"
+          style={{ background: "rgba(7,7,7,0.98)", borderColor: `rgba(201,164,76,0.15)` }}
+        >
+          {navLinks.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              className="text-base py-1"
+              style={{ color: CREAM }}
+              onClick={() => setOpen(false)}
+            >
+              {l.label}
+            </a>
+          ))}
+          <a
+            href={contactInfo.whatsapp}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-2 flex items-center justify-center gap-2 py-3 rounded font-medium text-sm"
+            style={{ background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+          >
+            <MessageCircle size={15} /> WhatsApp Us
+          </a>
+          <a
+            href={`tel:${contactInfo.businessPhone}`}
+            className="flex items-center justify-center gap-2 py-3 rounded font-medium text-sm border"
+            style={{ borderColor: `rgba(201,164,76,0.35)`, color: GOLD }}
+          >
+            <Phone size={15} /> 078 261 3861
+          </a>
+        </div>
+      )}
+    </header>
+  );
+}
+
+// ─── Hero ────────────────────────────────────────────────────────────────────
+
+function OrnamentalSVG() {
+  return (
+    <svg
+      className="absolute inset-0 w-full h-full pointer-events-none"
+      viewBox="0 0 900 700"
+      preserveAspectRatio="xMidYMid slice"
+      aria-hidden="true"
+    >
+      <defs>
+        <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+          <stop offset="0%" stopColor={GOLD} stopOpacity="0.15" />
+          <stop offset="100%" stopColor={GOLD} stopOpacity="0" />
+        </radialGradient>
+      </defs>
+      <rect width="900" height="700" fill="url(#glow)" />
+      <circle cx="450" cy="320" r="280" fill="none" stroke={GOLD} strokeWidth="0.5" strokeDasharray="4 12" opacity="0.35" />
+      <circle cx="450" cy="320" r="220" fill="none" stroke={GOLD} strokeWidth="0.5" opacity="0.2" />
+      <circle cx="450" cy="320" r="160" fill="none" stroke={GOLD} strokeWidth="0.5" strokeDasharray="2 8" opacity="0.3" />
+      {/* arch */}
+      <path d="M 80 680 Q 450 20 820 680" fill="none" stroke={GOLD} strokeWidth="0.8" opacity="0.4" />
+      <path d="M 160 680 Q 450 80 740 680" fill="none" stroke={GOLD} strokeWidth="0.5" opacity="0.2" />
+      {/* corner flourish TL */}
+      <path d="M 0 0 L 60 0 M 0 0 L 0 60" stroke={GOLD} strokeWidth="1" opacity="0.4" />
+      <path d="M 20 0 L 20 20 L 0 20" fill="none" stroke={GOLD} strokeWidth="0.5" opacity="0.3" />
+      {/* corner flourish TR */}
+      <path d="M 900 0 L 840 0 M 900 0 L 900 60" stroke={GOLD} strokeWidth="1" opacity="0.4" />
+      <path d="M 880 0 L 880 20 L 900 20" fill="none" stroke={GOLD} strokeWidth="0.5" opacity="0.3" />
+      {/* horizontal rule */}
+      <line x1="200" y1="580" x2="700" y2="580" stroke={GOLD} strokeWidth="0.5" opacity="0.25" />
+    </svg>
+  );
+}
+
+function Hero() {
+  return (
+    <section
+      id="home"
+      className="relative min-h-screen flex items-center pt-16 overflow-hidden"
+      style={{
+        background: `radial-gradient(ellipse at 50% 60%, #0D1A17 0%, ${BLACK} 70%)`,
+      }}
+    >
+      <OrnamentalSVG />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 py-20 w-full">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          {/* Left — copy */}
+          <div>
+            <motion.div {...fadeUp(0)}>
+              <SectionLabel>Kasi to Home Funeral Services</SectionLabel>
+            </motion.div>
+
+            <motion.h1
+              {...fadeUp(0.1)}
+              className="font-serif text-4xl sm:text-5xl lg:text-6xl font-semibold leading-[1.1] mb-6"
+              style={{ color: CREAM }}
+            >
+              From the first call to the{" "}
+              <em className="not-italic" style={{ color: GOLD }}>final farewell.</em>
+            </motion.h1>
+
+            <motion.p {...fadeUp(0.2)} className="text-base sm:text-lg leading-relaxed mb-8 max-w-lg" style={{ color: "rgba(247,241,229,0.7)" }}>
+              Kasi to Home Funeral Services helps families honour their loved ones with dignity, comfort, and affordable funeral cover backed by Atlehang Life.
+            </motion.p>
+
+            <motion.div {...fadeUp(0.3)} className="flex flex-wrap gap-4 mb-8">
+              <a
+                href={contactInfo.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium text-sm transition-all duration-200 hover:brightness-110 active:scale-95"
+                style={{ background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+              >
+                <MessageCircle size={16} /> WhatsApp Us
+              </a>
+              <a
+                href="#plans"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium text-sm border transition-all duration-200 hover:border-[#C9A44C]/60"
+                style={{ borderColor: `rgba(201,164,76,0.35)`, color: GOLD }}
+              >
+                View Funeral Plans <ArrowRight size={14} />
+              </a>
+            </motion.div>
+
+            <motion.a
+              {...fadeUp(0.35)}
+              href={`tel:${contactInfo.businessPhone}`}
+              className="inline-flex items-center gap-2 text-sm transition-colors"
+              style={{ color: "rgba(247,241,229,0.5)" }}
+            >
+              <Phone size={13} />
+              Need assistance? Call{" "}
+              <span style={{ color: GOLD }}>078 261 3861</span>
+            </motion.a>
+          </div>
+
+          {/* Right — floating card */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4, ease: [0.22, 1, 0.36, 1] }}
+            className="hidden lg:block"
+          >
+            <div className="relative">
+              {/* background glow */}
+              <div
+                className="absolute -inset-8 rounded-2xl opacity-20 blur-2xl"
+                style={{ background: `radial-gradient(ellipse, ${GOLD} 0%, transparent 70%)` }}
+              />
+              <div
+                className="relative rounded-2xl p-8 border"
+                style={{
+                  background: "rgba(13,26,23,0.9)",
+                  borderColor: `rgba(201,164,76,0.35)`,
+                  backdropFilter: "blur(16px)",
+                }}
+              >
+                {/* header row */}
+                <div className="flex items-center justify-between mb-8">
+                  <div>
+                    <p className="text-xs uppercase tracking-[0.18em] mb-1" style={{ color: GOLD }}>
+                      Family Funeral Cover
+                    </p>
+                    <p className="text-xs" style={{ color: "rgba(247,241,229,0.45)" }}>Underwritten by Atlehang Life</p>
+                  </div>
+                  <div
+                    className="w-10 h-10 rounded-full flex items-center justify-center"
+                    style={{ background: `rgba(201,164,76,0.12)`, border: `1px solid rgba(201,164,76,0.3)` }}
+                  >
+                    <Shield size={16} style={{ color: GOLD }} />
+                  </div>
+                </div>
+
+                <div className="mb-8">
+                  <p className="text-xs mb-1" style={{ color: "rgba(247,241,229,0.5)" }}>Starting from</p>
+                  <p className="font-serif text-5xl font-semibold" style={{ color: CREAM }}>
+                    R167<span className="text-xl font-sans font-normal" style={{ color: GOLD }}>/mo</span>
+                  </p>
+                </div>
+
+                <div className="space-y-3 mb-8">
+                  {["Family funeral cover plans", "Collection & preparation of the deceased", "Dignified burial support"].map((item) => (
+                    <div key={item} className="flex items-start gap-3">
+                      <div
+                        className="mt-0.5 w-4 h-4 rounded-full flex items-center justify-center shrink-0"
+                        style={{ background: `rgba(201,164,76,0.15)` }}
+                      >
+                        <Check size={9} style={{ color: GOLD }} />
+                      </div>
+                      <span className="text-sm leading-snug" style={{ color: "rgba(247,241,229,0.7)" }}>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="h-px mb-6" style={{ background: `rgba(201,164,76,0.15)` }} />
+                <p className="text-xs text-center" style={{ color: "rgba(247,241,229,0.4)" }}>
+                  Excellent service back home.
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* bottom fade */}
+      <div
+        className="absolute bottom-0 left-0 right-0 h-24 pointer-events-none"
+        style={{ background: `linear-gradient(to bottom, transparent, ${BLACK})` }}
+      />
+    </section>
+  );
+}
+
+// ─── Trust Strip ─────────────────────────────────────────────────────────────
+
+function TrustStrip() {
+  return (
+    <section
+      className="border-y"
+      style={{ background: EMERALD, borderColor: `rgba(201,164,76,0.2)` }}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 py-8">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {trustItems.map(({ icon: Icon, text }, i) => (
+            <motion.div
+              key={text}
+              {...fadeUp(i * 0.08)}
+              className="flex items-center gap-3"
+            >
+              <div
+                className="w-8 h-8 rounded flex items-center justify-center shrink-0"
+                style={{ background: `rgba(201,164,76,0.12)`, border: `1px solid rgba(201,164,76,0.25)` }}
+              >
+                <Icon size={14} style={{ color: GOLD }} />
+              </div>
+              <span className="text-sm font-medium leading-snug" style={{ color: "rgba(247,241,229,0.85)" }}>{text}</span>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── About ───────────────────────────────────────────────────────────────────
+
+function AboutSection() {
+  return (
+    <section id="about" className="py-24" style={{ background: BLACK }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div {...fadeUp(0)}>
+            <SectionLabel>About Us</SectionLabel>
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold leading-tight mb-6" style={{ color: CREAM }}>
+              Built on comfort, dignity, and care.
+            </h2>
+            <p className="text-base leading-relaxed mb-5" style={{ color: "rgba(247,241,229,0.65)" }}>
+              Kasi to Home Funeral Services is a local and national funeral services brand created to bring comfort to grieving families. The business helps families celebrate the life lived by their loved one with style, dignity, and respect.
+            </p>
+            <p className="text-base leading-relaxed" style={{ color: "rgba(247,241,229,0.65)" }}>
+              It is not only about premiums. It is about bringing family and loved ones together, and helping families move through a difficult time with guidance and care.
+            </p>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.15)} className="grid grid-cols-2 gap-4">
+            {[
+              { icon: Home, title: "Local & National", desc: "Serving families across South Africa from home." },
+              { icon: Heart, title: "Family First", desc: "Every plan is built around the family unit." },
+              { icon: Shield, title: "Fully Underwritten", desc: "Backed by Atlehang Life, FSP 51568." },
+              { icon: Leaf, title: "Dignified Always", desc: "Respectful, calm support through every step." },
+            ].map(({ icon: Icon, title, desc }) => (
+              <div
+                key={title}
+                className="rounded-xl p-5 border transition-all duration-300 hover:border-[#C9A44C]/40"
+                style={{ background: "#0D1A17", borderColor: `rgba(201,164,76,0.18)` }}
+              >
+                <div
+                  className="w-8 h-8 rounded flex items-center justify-center mb-3"
+                  style={{ background: `rgba(201,164,76,0.1)` }}
+                >
+                  <Icon size={15} style={{ color: GOLD }} />
+                </div>
+                <p className="font-serif text-sm font-semibold mb-1" style={{ color: CREAM }}>{title}</p>
+                <p className="text-xs leading-relaxed" style={{ color: "rgba(247,241,229,0.5)" }}>{desc}</p>
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Plan Card ───────────────────────────────────────────────────────────────
+
+function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
+  const [expanded, setExpanded] = useState(false);
+  const preview = plan.benefits.slice(0, 4);
+  const rest = plan.benefits.slice(4);
+
+  return (
+    <motion.div
+      {...fadeUp(index * 0.1)}
+      className="relative rounded-2xl border flex flex-col transition-all duration-300 hover:border-[#C9A44C]/50 group"
+      style={{
+        background: plan.highlight
+          ? `linear-gradient(160deg, #0D1F1A 0%, #061F1C 100%)`
+          : "#0D1A17",
+        borderColor: plan.highlight ? `rgba(201,164,76,0.45)` : `rgba(201,164,76,0.2)`,
+      }}
+    >
+      {plan.highlight && (
+        <div
+          className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-medium uppercase tracking-widest"
+          style={{ background: `linear-gradient(90deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+        >
+          Most Comprehensive
+        </div>
+      )}
+
+      <div className="p-6 flex-1 flex flex-col">
+        <div className="mb-5">
+          <p className="text-xs uppercase tracking-[0.18em] mb-2" style={{ color: GOLD }}>{plan.name}</p>
+          <div className="flex items-end gap-1 mb-1">
+            <span className="font-serif text-3xl font-semibold" style={{ color: CREAM }}>
+              R{plan.premium.toLocaleString()}
+            </span>
+            <span className="text-sm pb-1" style={{ color: "rgba(247,241,229,0.5)" }}>/month</span>
+          </div>
+          <p className="text-xs" style={{ color: "rgba(247,241,229,0.45)" }}>{plan.includes}</p>
+        </div>
+
+        <div className="h-px mb-5" style={{ background: `rgba(201,164,76,0.15)` }} />
+
+        {/* Cover amounts */}
+        <div className="mb-5 space-y-1.5">
+          {plan.coverAmounts.map(({ label, amount }) => (
+            <div key={label} className="flex items-center justify-between">
+              <span className="text-xs" style={{ color: "rgba(247,241,229,0.55)" }}>{label}</span>
+              <span className="text-xs font-medium" style={{ color: GOLD }}>{amount}</span>
+            </div>
+          ))}
+        </div>
+
+        <div className="h-px mb-5" style={{ background: `rgba(201,164,76,0.15)` }} />
+
+        {/* Benefits */}
+        <div className="space-y-2 mb-4 flex-1">
+          {preview.map((b) => (
+            <div key={b} className="flex items-start gap-2.5">
+              <Check size={12} className="mt-0.5 shrink-0" style={{ color: GOLD }} />
+              <span className="text-xs leading-snug" style={{ color: "rgba(247,241,229,0.7)" }}>{b}</span>
+            </div>
+          ))}
+          {expanded && rest.map((b) => (
+            <div key={b} className="flex items-start gap-2.5">
+              <Check size={12} className="mt-0.5 shrink-0" style={{ color: GOLD }} />
+              <span className="text-xs leading-snug" style={{ color: "rgba(247,241,229,0.7)" }}>{b}</span>
+            </div>
+          ))}
+        </div>
+
+        {rest.length > 0 && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center gap-1.5 text-xs mb-5 transition-colors hover:opacity-80"
+            style={{ color: GOLD }}
+          >
+            <ChevronDown
+              size={12}
+              style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
+            />
+            {expanded ? "Show less" : `View all ${plan.benefits.length} benefits`}
+          </button>
+        )}
+
+        <a
+          href={contactInfo.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-auto w-full py-3 rounded text-sm font-medium text-center transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+          style={
+            plan.highlight
+              ? { background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }
+              : { border: `1px solid rgba(201,164,76,0.35)`, color: GOLD }
+          }
+        >
+          Ask about this plan
+        </a>
+      </div>
+    </motion.div>
+  );
+}
+
+// ─── Plans Section ───────────────────────────────────────────────────────────
+
+function PlansSection() {
+  return (
+    <section id="plans" className="py-24" style={{ background: `#050C0B` }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <motion.div {...fadeUp(0)} className="mb-14">
+          <SectionLabel>Funeral Plans</SectionLabel>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: CREAM }}>
+            Cover that fits your family.
+          </h2>
+          <p className="mt-3 text-sm max-w-xl" style={{ color: "rgba(247,241,229,0.55)" }}>
+            All plans cover member, spouse, and up to 6 children. Age bands apply — member and spouse 18–65 years, children 0–21 years.
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {funeralPlans.map((plan, i) => (
+            <PlanCard key={plan.name} plan={plan} index={i} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Benefits Section ────────────────────────────────────────────────────────
+
+function BenefitsSection() {
+  const cards = [
+    {
+      title: "Standard Care",
+      icon: Heart,
+      items: [
+        "Collection of the deceased",
+        "Storage of the body",
+        "Washing and preparation of the body",
+        "Assistance with registration of death",
+      ],
+    },
+    {
+      title: "Cemetery Support",
+      icon: Leaf,
+      items: [
+        "Family gazebo",
+        "Grave gazebo",
+        "Covered chairs",
+        "Green carpet / graveside setup",
+        "Lowering device",
+        "Still water for the family",
+      ],
+    },
+  ];
+
+  return (
+    <section id="benefits" className="py-24" style={{ background: BLACK }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <motion.div {...fadeUp(0)} className="mb-14">
+          <SectionLabel>Standard Benefits</SectionLabel>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold max-w-xl" style={{ color: CREAM }}>
+            Support included when your family needs it most.
+          </h2>
+        </motion.div>
+
+        <div className="grid md:grid-cols-2 gap-6">
+          {cards.map(({ title, icon: Icon, items }, i) => (
+            <motion.div
+              key={title}
+              {...fadeUp(i * 0.12)}
+              className="rounded-2xl p-8 border"
+              style={{ background: "#0D1A17", borderColor: `rgba(201,164,76,0.2)` }}
+            >
+              <div className="flex items-center gap-4 mb-6">
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center"
+                  style={{ background: `rgba(201,164,76,0.1)`, border: `1px solid rgba(201,164,76,0.25)` }}
+                >
+                  <Icon size={18} style={{ color: GOLD }} />
+                </div>
+                <h3 className="font-serif text-xl font-semibold" style={{ color: CREAM }}>{title}</h3>
+              </div>
+              <div className="space-y-3">
+                {items.map((item) => (
+                  <div key={item} className="flex items-start gap-3">
+                    <Check size={13} className="mt-0.5 shrink-0" style={{ color: GOLD }} />
+                    <span className="text-sm leading-snug" style={{ color: "rgba(247,241,229,0.7)" }}>{item}</span>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Cover Options ───────────────────────────────────────────────────────────
+
+function CoverOptionsSection() {
+  return (
+    <section
+      className="py-24"
+      style={{ background: `linear-gradient(160deg, #061F1C 0%, #07111F 100%)` }}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <motion.div {...fadeUp(0)}>
+            <SectionLabel>Cover Options</SectionLabel>
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold mb-6" style={{ color: CREAM }}>
+              Flexible cover for every family structure.
+            </h2>
+            <div className="space-y-3 mb-8">
+              {coverOptions.map((opt, i) => (
+                <motion.div
+                  key={opt}
+                  {...fadeUp(i * 0.07)}
+                  className="flex items-center gap-4 p-4 rounded-xl border"
+                  style={{ background: "rgba(13,26,23,0.6)", borderColor: `rgba(201,164,76,0.15)` }}
+                >
+                  <div
+                    className="w-5 h-5 rounded-full flex items-center justify-center shrink-0"
+                    style={{ background: `rgba(201,164,76,0.15)` }}
+                  >
+                    <Check size={10} style={{ color: GOLD }} />
+                  </div>
+                  <span className="text-sm" style={{ color: "rgba(247,241,229,0.8)" }}>{opt}</span>
+                </motion.div>
+              ))}
+            </div>
+            <div className="flex flex-wrap gap-4">
+              <a
+                href={contactInfo.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium text-sm transition-all duration-200 hover:brightness-110"
+                style={{ background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+              >
+                <MessageCircle size={15} /> WhatsApp us for cover options
+              </a>
+              <a
+                href="/kasi-to-home-brochure.pdf"
+                download="Kasi to Home Funeral Services Brochure.pdf"
+                className="inline-flex items-center gap-2 px-6 py-3 rounded font-medium text-sm border transition-all duration-200 hover:border-[#C9A44C]/60"
+                style={{ borderColor: `rgba(201,164,76,0.3)`, color: GOLD }}
+              >
+                <FileText size={15} /> Download Brochure
+              </a>
+            </div>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.15)} className="hidden lg:block">
+            <div
+              className="rounded-2xl p-10 text-center border"
+              style={{ background: "rgba(13,26,23,0.5)", borderColor: `rgba(201,164,76,0.2)` }}
+            >
+              <div
+                className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6"
+                style={{ background: `rgba(201,164,76,0.08)`, border: `1px solid rgba(201,164,76,0.2)` }}
+              >
+                <Users size={32} style={{ color: GOLD }} />
+              </div>
+              <p className="font-serif text-2xl font-semibold mb-2" style={{ color: CREAM }}>
+                5 cover configurations
+              </p>
+              <p className="text-sm leading-relaxed" style={{ color: "rgba(247,241,229,0.5)" }}>
+                From individual members to extended families — speak to us to find the right structure for your household.
+              </p>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Underwriter ─────────────────────────────────────────────────────────────
+
+function UnderwriterSection() {
+  return (
+    <section id="underwriter" className="py-24" style={{ background: BLACK }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8 text-center">
+        <motion.div {...fadeUp(0)} className="flex justify-center mb-4">
+          <GoldLine />
+        </motion.div>
+        <motion.p {...fadeUp(0.05)} className="text-xs uppercase tracking-[0.2em] mb-6" style={{ color: GOLD }}>
+          Our Underwriter
+        </motion.p>
+        <motion.h2 {...fadeUp(0.1)} className="font-serif text-3xl sm:text-4xl font-semibold mb-6" style={{ color: CREAM }}>
+          Underwritten by Atlehang Life.
+        </motion.h2>
+        <motion.p {...fadeUp(0.15)} className="text-base leading-relaxed max-w-2xl mx-auto mb-12" style={{ color: "rgba(247,241,229,0.65)" }}>
+          Kasi to Home Funeral Services products are underwritten by Atlehang Life, a licensed financial services provider and micro-insurer.
+        </motion.p>
+
+        <motion.div
+          {...fadeUp(0.2)}
+          className="inline-flex flex-col sm:flex-row items-center justify-center gap-8 rounded-2xl px-10 py-8 border mx-auto"
+          style={{ background: "#0D1A17", borderColor: `rgba(201,164,76,0.25)` }}
+        >
+          <img
+            src={atlehangLogoImg}
+            alt="Atlehang Life logo"
+            className="h-16 w-auto object-contain"
+          />
+          <div className="text-left">
+            <p className="font-serif text-xl font-semibold mb-3" style={{ color: CREAM }}>Atlehang Life (Pty) Ltd</p>
+            <div className="space-y-1">
+              <p className="text-sm" style={{ color: "rgba(247,241,229,0.6)" }}>
+                FSP Number: <span style={{ color: CREAM }}>51568</span>
+              </p>
+              <p className="text-sm" style={{ color: "rgba(247,241,229,0.6)" }}>
+                Registration: <span style={{ color: CREAM }}>2020/864927/07</span>
+              </p>
+              <a
+                href="https://www.atlehanglife.co.za/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 text-sm mt-2 transition-opacity hover:opacity-80"
+                style={{ color: GOLD }}
+              >
+                atlehanglife.co.za <ExternalLink size={11} />
+              </a>
+            </div>
+          </div>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Policy Accordion ────────────────────────────────────────────────────────
+
+function PolicyAccordionSection() {
+  return (
+    <section
+      className="py-24"
+      style={{ background: `#050C0B` }}
+    >
+      <div className="max-w-3xl mx-auto px-5 sm:px-8">
+        <motion.div {...fadeUp(0)} className="mb-12">
+          <SectionLabel>Policy Information</SectionLabel>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: CREAM }}>
+            Important policy information.
+          </h2>
+        </motion.div>
+
+        <motion.div {...fadeUp(0.1)}>
+          <Accordion.Root type="single" collapsible className="space-y-3">
+            {policyItems.map((item, i) => (
+              <Accordion.Item
+                key={item.title}
+                value={`item-${i}`}
+                className="rounded-xl border overflow-hidden"
+                style={{ background: "#0D1A17", borderColor: `rgba(201,164,76,0.18)` }}
+              >
+                <Accordion.Trigger className="w-full flex items-center justify-between px-6 py-4 text-left group">
+                  <span className="font-medium text-sm" style={{ color: CREAM }}>{item.title}</span>
+                  <ChevronDown
+                    size={16}
+                    style={{ color: GOLD, flexShrink: 0, transition: "transform 0.25s" }}
+                    className="group-data-[state=open]:rotate-180"
+                  />
+                </Accordion.Trigger>
+                <Accordion.Content className="overflow-hidden data-[state=open]:animate-none">
+                  <div className="px-6 pb-5 space-y-2">
+                    <div className="h-px mb-4" style={{ background: `rgba(201,164,76,0.12)` }} />
+                    {item.content.map((line, j) => (
+                      <div key={j} className="flex items-start gap-3">
+                        <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: GOLD }} />
+                        <p className="text-sm leading-relaxed" style={{ color: "rgba(247,241,229,0.65)" }}>{line}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Accordion.Content>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        </motion.div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Contact ─────────────────────────────────────────────────────────────────
+
+function ContactSection() {
+  return (
+    <section id="contact" className="py-24" style={{ background: BLACK }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="grid lg:grid-cols-2 gap-16 items-start">
+          <motion.div {...fadeUp(0)}>
+            <SectionLabel>Contact Us</SectionLabel>
+            <h2 className="font-serif text-3xl sm:text-4xl font-semibold mb-5" style={{ color: CREAM }}>
+              Speak to us today.
+            </h2>
+            <p className="text-base leading-relaxed mb-10" style={{ color: "rgba(247,241,229,0.65)" }}>
+              Whether you are planning ahead or need urgent family support, Kasi to Home Funeral Services is here to guide you from the first call to the final farewell.
+            </p>
+
+            <div className="space-y-4">
+              {[
+                { label: "Owner / Main Contact", value: contactInfo.owner, icon: Users },
+                { label: "Business Hours", value: contactInfo.hours, icon: Clock },
+                { label: "Email", value: contactInfo.email, icon: Mail, href: `mailto:${contactInfo.email}` },
+                { label: "Company Registration", value: contactInfo.registration, icon: FileText },
+              ].map(({ label, value, icon: Icon, href }) => (
+                <div key={label} className="flex items-start gap-4">
+                  <div
+                    className="w-8 h-8 rounded flex items-center justify-center shrink-0 mt-0.5"
+                    style={{ background: `rgba(201,164,76,0.1)`, border: `1px solid rgba(201,164,76,0.2)` }}
+                  >
+                    <Icon size={14} style={{ color: GOLD }} />
+                  </div>
+                  <div>
+                    <p className="text-xs mb-0.5" style={{ color: "rgba(247,241,229,0.4)" }}>{label}</p>
+                    {href ? (
+                      <a href={href} className="text-sm hover:opacity-80 transition-opacity" style={{ color: CREAM }}>{value}</a>
+                    ) : (
+                      <p className="text-sm" style={{ color: CREAM }}>{value}</p>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+
+          <motion.div {...fadeUp(0.15)} className="grid gap-4">
+            {[
+              {
+                label: "Call Owner",
+                sub: contactInfo.ownerPhoneDisplay,
+                href: `tel:${contactInfo.ownerPhone}`,
+                icon: Phone,
+                primary: false,
+              },
+              {
+                label: "Call Business",
+                sub: contactInfo.businessPhoneDisplay,
+                href: `tel:${contactInfo.businessPhone}`,
+                icon: Phone,
+                primary: false,
+              },
+              {
+                label: "WhatsApp Us",
+                sub: "Fastest response",
+                href: contactInfo.whatsapp,
+                icon: MessageCircle,
+                primary: true,
+                external: true,
+              },
+              {
+                label: "Email Us",
+                sub: contactInfo.email,
+                href: `mailto:${contactInfo.email}`,
+                icon: Mail,
+                primary: false,
+              },
+            ].map(({ label, sub, href, icon: Icon, primary, external }) => (
+              <a
+                key={label}
+                href={href}
+                target={external ? "_blank" : undefined}
+                rel={external ? "noopener noreferrer" : undefined}
+                className="flex items-center gap-4 p-5 rounded-xl border transition-all duration-200 group hover:border-[#C9A44C]/50"
+                style={
+                  primary
+                    ? { background: `linear-gradient(135deg, ${GOLD}22, ${GOLD}11)`, borderColor: `rgba(201,164,76,0.45)` }
+                    : { background: "#0D1A17", borderColor: `rgba(201,164,76,0.18)` }
+                }
+              >
+                <div
+                  className="w-10 h-10 rounded-lg flex items-center justify-center shrink-0"
+                  style={
+                    primary
+                      ? { background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})` }
+                      : { background: `rgba(201,164,76,0.1)` }
+                  }
+                >
+                  <Icon size={18} style={{ color: primary ? BLACK : GOLD }} />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-medium" style={{ color: CREAM }}>{label}</p>
+                  <p className="text-xs truncate" style={{ color: "rgba(247,241,229,0.45)" }}>{sub}</p>
+                </div>
+                <ArrowRight size={14} className="shrink-0 opacity-40 group-hover:opacity-70 transition-opacity" style={{ color: GOLD }} />
+              </a>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Footer ──────────────────────────────────────────────────────────────────
+
+function Footer() {
+  return (
+    <footer
+      className="border-t py-16"
+      style={{ background: "#030808", borderColor: `rgba(201,164,76,0.15)` }}
+    >
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-12 mb-12">
+          {/* Brand */}
+          <div>
+            <div className="flex items-center gap-3 mb-4">
+              <img src={logoImg} alt="Kasi to Home logo" className="w-8 h-8 rounded object-cover" />
+              <span className="font-serif text-sm font-semibold" style={{ color: CREAM }}>
+                Kasi to Home Funeral Services
+              </span>
+            </div>
+            <p className="text-sm italic mb-4" style={{ color: "rgba(247,241,229,0.4)" }}>
+              From the first call to the final farewell.
+            </p>
+            <p className="text-xs" style={{ color: "rgba(247,241,229,0.3)" }}>
+              Excellent service back home.
+            </p>
+          </div>
+
+          {/* Contact */}
+          <div>
+            <p className="text-xs uppercase tracking-[0.15em] mb-4" style={{ color: GOLD }}>Contact</p>
+            <div className="space-y-2">
+              <a href={`tel:${contactInfo.businessPhone}`} className="block text-sm hover:opacity-80 transition-opacity" style={{ color: "rgba(247,241,229,0.6)" }}>
+                {contactInfo.businessPhoneDisplay}
+              </a>
+              <a href={`mailto:${contactInfo.email}`} className="block text-sm hover:opacity-80 transition-opacity" style={{ color: "rgba(247,241,229,0.6)" }}>
+                {contactInfo.email}
+              </a>
+            </div>
+          </div>
+
+          {/* Legal */}
+          <div>
+            <p className="text-xs uppercase tracking-[0.15em] mb-4" style={{ color: GOLD }}>Regulatory</p>
+            <div className="space-y-1.5">
+              <p className="text-xs" style={{ color: "rgba(247,241,229,0.45)" }}>
+                Underwritten by Atlehang Life, FSP 51568
+              </p>
+              <p className="text-xs" style={{ color: "rgba(247,241,229,0.45)" }}>
+                Reg. 2020/864927/07
+              </p>
+              <p className="text-xs mt-3" style={{ color: "rgba(247,241,229,0.35)" }}>
+                Company Reg. 2026/254458/07
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div className="h-px mb-8" style={{ background: `rgba(201,164,76,0.12)` }} />
+
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+          <p className="text-xs" style={{ color: "rgba(247,241,229,0.3)" }}>
+            © {new Date().getFullYear()} Kasi to Home Funeral Services. All rights reserved.
+          </p>
+          <p className="text-xs" style={{ color: "rgba(247,241,229,0.3)" }}>
+            Prepared by{" "}
+            <a
+              href="https://valosystems.co.za"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hover:opacity-80 transition-opacity"
+              style={{ color: "rgba(201,164,76,0.5)" }}
+            >
+              Valo Systems
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+// ─── Sticky Mobile Bar ───────────────────────────────────────────────────────
+
+function StickyMobileBar() {
+  return (
+    <div
+      className="fixed bottom-0 left-0 right-0 z-40 lg:hidden border-t"
+      style={{ background: "rgba(7,7,7,0.97)", borderColor: `rgba(201,164,76,0.2)`, backdropFilter: "blur(12px)" }}
+    >
+      <div className="flex items-stretch">
+        <a
+          href={`tel:${contactInfo.businessPhone}`}
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-3 border-r text-xs font-medium transition-opacity active:opacity-70"
+          style={{ color: GOLD, borderColor: `rgba(201,164,76,0.2)` }}
+        >
+          <Phone size={18} />
+          Call
+        </a>
+        <a
+          href={contactInfo.whatsapp}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-3 text-xs font-medium transition-opacity active:opacity-70"
+          style={{ background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
+        >
+          <MessageCircle size={18} />
+          WhatsApp
+        </a>
+        <a
+          href="#plans"
+          className="flex-1 flex flex-col items-center justify-center gap-1 py-3 border-l text-xs font-medium transition-opacity active:opacity-70"
+          style={{ color: CREAM, borderColor: `rgba(201,164,76,0.2)` }}
+        >
+          <FileText size={18} />
+          Plans
+        </a>
+      </div>
+    </div>
+  );
+}
+
+// ─── App ─────────────────────────────────────────────────────────────────────
+
+export default function App() {
+  return (
+    <div
+      className="font-sans overflow-x-hidden"
+      style={{ background: BLACK, color: CREAM }}
+    >
+      <Header />
+      <main className="pb-14 lg:pb-0">
+        <Hero />
+        <TrustStrip />
+        <AboutSection />
+        <PlansSection />
+        <BenefitsSection />
+        <CoverOptionsSection />
+        <UnderwriterSection />
+        <PolicyAccordionSection />
+        <ContactSection />
+      </main>
+      <Footer />
+      <StickyMobileBar />
+    </div>
+  );
+}

@@ -1,0 +1,336 @@
+Use this prompt in Figma / Figma Make / AI builder:
+
+Create a modern, premium, royal funeral services website for:
+Business name: Kasi to Home Funeral Services
+Domain: kasitohomefunerals.co.za
+Tagline: From the first call to the final farewell.
+Supporting line: Excellent service back home.
+Prepared by: Valo Systems — https://valosystems.co.za
+The website must be built in React and designed as a premium one-page website that can later grow into a full platform.
+Important brand direction:
+- Premium, royal, dignified, calm, trustworthy.
+- Use the current black and gold brand feel.
+- Do not make it look like a cheap funeral template.
+- No random stock funeral images.
+- Use strong typography, elegant spacing, gold accents, subtle patterns, soft gradients, and premium cards.
+- It must feel respectful, not flashy.
+- It must work beautifully on mobile and desktop.
+Colour palette:
+- Royal Black: #070707
+- Deep Emerald / Royal Green: #061F1C
+- Deep Navy: #07111F
+- Kasi Gold: #C9A44C
+- Rich Gold: #A87B24
+- Soft Cream: #F7F1E5
+- White: #FFFFFF
+Typography:
+- Use an elegant serif for headings, such as Playfair Display, Cormorant Garamond, or Libre Baskerville.
+- Use a clean sans-serif for body text, such as Inter, Lato, or Source Sans 3.
+- Headings must feel ceremonial and premium.
+- Body copy must be simple, readable, and clear.
+Website structure:
+1. Header
+2. Hero section
+3. Trust strip
+4. About section
+5. Funeral plans section
+6. Standard benefits section
+7. Cover options section
+8. Underwriter section
+9. Important policy information
+10. Contact section
+11. Footer
+Header:
+- Logo placeholder on the left.
+- Text: Kasi to Home Funeral Services.
+- Navigation: Home, About, Plans, Benefits, Underwriter, Contact.
+- Primary button: WhatsApp Us.
+- Mobile: collapsed menu plus sticky call/WhatsApp actions.
+Hero section:
+Main headline:
+From the first call to the final farewell.
+Subheading:
+Kasi to Home Funeral Services helps families honour their loved ones with dignity, comfort, and affordable funeral cover backed by Atlehang Life.
+Buttons:
+- WhatsApp Us
+- View Funeral Plans
+Add a small urgent support line:
+Need assistance? Call 078 261 3861
+Hero visual style:
+- Dark royal background.
+- Gold ornamental linework.
+- Subtle arch pattern.
+- Soft gold glow.
+- Premium card showing:
+  “Family Funeral Cover”
+  “From R167/month”
+  “Underwritten by Atlehang Life”
+Trust strip:
+Display four short trust items:
+- Family funeral cover plans
+- Dignified funeral support
+- Underwritten by Atlehang Life
+- From R167 per month
+About section:
+Heading:
+Built on comfort, dignity, and care.
+Copy:
+Kasi to Home Funeral Services is a local and national funeral services brand created to bring comfort to grieving families. The business helps families celebrate the life lived by their loved one with style, dignity, and respect.
+It is not only about premiums. It is about bringing family and loved ones together, and helping families move through a difficult time with guidance and care.
+Funeral plans section:
+Create four premium pricing cards. The data must be easy to update from one central JavaScript/TypeScript data object, not hard-coded into every card.
+Use a file or data object like:
+const funeralPlans = [
+  {
+    name: "Excel Plan",
+    premium: 167,
+    coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: [
+      "Flatlid coffin",
+      "Hearse and 1 family car",
+      "Tent and 50 chairs",
+      "1 toilet",
+      "2 tables",
+      "Vegetables",
+      "A2 photo"
+    ],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R15,000" },
+      { label: "Children 14–21 years", amount: "R15,000" },
+      { label: "Children 6–13 years", amount: "R7,500" },
+      { label: "Children 1–5 years", amount: "R3,750" },
+      { label: "Stillborn to 11 months", amount: "R1,875" }
+    ]
+  },
+  {
+    name: "Delta Plan",
+    premium: 210,
+    coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: [
+      "Open face square casket",
+      "Hearse and 2 family cars",
+      "Tent and 50 chairs",
+      "1 toilet",
+      "2 tables",
+      "Groceries and vegetables",
+      "A2 photo",
+      "Headstone"
+    ],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R20,000" },
+      { label: "Children 14–21 years", amount: "R20,000" },
+      { label: "Children 6–13 years", amount: "R10,000" },
+      { label: "Children 1–5 years", amount: "R5,000" },
+      { label: "Stillborn to 11 months", amount: "R2,500" }
+    ]
+  },
+  {
+    name: "Classic Plan",
+    premium: 291,
+    coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: [
+      "Kiaat Mini Dome coffin",
+      "Coffin spray",
+      "Hearse and 4 family cars",
+      "7x12 tent and 100 chairs",
+      "1 toilet",
+      "4 tables",
+      "Groceries and vegetables",
+      "A2 photo",
+      "Headstone",
+      "Grave marker",
+      "1x flowers"
+    ],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R30,000" },
+      { label: "Children 14–21 years", amount: "R30,000" },
+      { label: "Children 6–13 years", amount: "R15,000" },
+      { label: "Children 1–5 years", amount: "R7,500" },
+      { label: "Stillborn to 11 months", amount: "R3,750" }
+    ]
+  },
+  {
+    name: "Blue Plan",
+    premium: 470,
+    coverPeople: "6 people",
+    includes: "Member + spouse and 6 children",
+    ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
+    benefits: [
+      "Kiaat Standard Dome coffin",
+      "Coffin spray",
+      "Hearse and 4 family cars",
+      "7x12 tent and 100 chairs",
+      "1 toilet",
+      "4 tables",
+      "Groceries and vegetables",
+      "A2 photo",
+      "Headstone",
+      "Grave marker",
+      "2x flowers"
+    ],
+    coverAmounts: [
+      { label: "Member + spouse", amount: "R50,000" },
+      { label: "Children 14–21 years", amount: "R50,000" },
+      { label: "Children 6–13 years", amount: "R25,000" },
+      { label: "Children 1–5 years", amount: "R12,500" },
+      { label: "Stillborn to 11 months", amount: "R6,250" }
+    ]
+  }
+];
+Plan card design:
+- Premium dark cards with gold borders.
+- Show price clearly: “R167/month”.
+- Show best-for text.
+- Show 4–5 highlighted benefits first.
+- Include expandable “View full benefits”.
+- Include CTA button: “Ask about this plan”.
+- Blue Plan should feel most premium, but do not make the other plans look weak.
+- Cards must stack cleanly on mobile.
+Standard benefits section:
+Heading:
+Support included when your family needs it most.
+Create two cards:
+Card 1: Standard Care
+- Collection of the deceased
+- Storage of the body
+- Washing and preparation of the body
+- Assistance with registration of death
+Card 2: Cemetery Support
+- Family gazebo
+- Grave gazebo
+- Covered chairs
+- Green carpet / graveside setup
+- Lowering device
+- Still water for the family
+Cover options section:
+Keep this simple and not table-heavy. Show that flexible cover options are available for:
+- Main Member Only
+- Main Member & Spouse
+- Main Member & Children up to 6
+- Main Member, Spouse & Children up to 6
+- Extended Family
+Add a CTA:
+WhatsApp us for cover options
+Also make room for a future downloadable brochure button.
+Underwriter section:
+Heading:
+Underwritten by Atlehang Life.
+Copy:
+Kasi to Home Funeral Services products are underwritten by Atlehang Life, a licensed financial services provider and micro-insurer.
+Show:
+Atlehang Life (Pty) Ltd
+FSP Number: 51568
+Company Registration Number: 2020/864927/07
+Website: https://www.atlehanglife.co.za/
+Important policy information section:
+Use an accordion design.
+Include:
+Waiting Periods:
+- 6 months waiting period for natural causes.
+- No waiting period for accidental death, provided the first premium has been received.
+- Waiting period may not apply for takeover schemes, subject to proof of previous cover and waiting period served.
+- If cover is increased during a takeover, a waiting period may apply to the difference.
+Claims:
+- Claims must be notified within six months after the event.
+Cancellations:
+- Policies can be cancelled with one month’s notice.
+General Exclusions:
+- Suicide within the first 12 months of the policy.
+- Death caused by unlawful activities.
+- Abortions.
+- Illegal immigrants.
+Disclaimer:
+All benefits, premiums, waiting periods, exclusions, and cover amounts are subject to the official policy wording and underwriter approval. Please confirm all details with Kasi to Home Funeral Services before joining.
+Contact section:
+Heading:
+Speak to us today.
+Copy:
+Whether you are planning ahead or need urgent family support, Kasi to Home Funeral Services is here to guide you from the first call to the final farewell.
+Contact details:
+Owner / Main Contact: Sibusiso Moolar
+Main Contact Number: +27 76 232 7358
+Business Number: +27 78 261 3861
+Email: kasi2hservices@gmail.com
+Company Registration: 2026/254458/07
+Business hours shown: 9:00 AM – 5:00 PM
+Contact CTAs:
+- Call Owner
+- Call Business
+- WhatsApp Us
+- Email Us
+Footer:
+Include:
+- Kasi to Home Funeral Services
+- From the first call to the final farewell.
+- Business number: +27 78 261 3861
+- Email: kasi2hservices@gmail.com
+- Underwritten by Atlehang Life, FSP 51568
+- Prepared by Valo Systems — https://valosystems.co.za
+- Copyright line
+React implementation requirements:
+- Use React with TypeScript.
+- Use Tailwind CSS for styling.
+- Use Framer Motion for subtle animations.
+- Use lucide-react for icons.
+- Store all plan data in one editable data file, e.g. src/data/plans.ts.
+- Store contact details in one editable config file, e.g. src/data/contact.ts.
+- Store colours and design tokens clearly in Tailwind config or CSS variables.
+- Do not hard-code premiums in multiple places.
+- The UI must automatically render plan cards from the data array.
+- Use reusable components:
+  - Header
+  - Hero
+  - TrustStrip
+  - AboutSection
+  - PlanCard
+  - PlansSection
+  - BenefitsSection
+  - CoverOptionsSection
+  - UnderwriterSection
+  - PolicyAccordion
+  - ContactSection
+  - Footer
+  - StickyMobileContactBar
+Animation requirements:
+- Use subtle fade-up animations.
+- Use slow gold line reveal.
+- Use soft hover effects on cards.
+- Use gentle background gradient movement.
+- No playful, bouncing, or loud animations.
+- Keep motion respectful and premium.
+Responsive requirements:
+- Mobile-first.
+- Sticky mobile contact bar with Call, WhatsApp, and Plans.
+- Plan cards stack on mobile.
+- Tables must not overflow.
+- Text must be readable on small screens.
+- CTAs must be large enough to tap.
+Visual style details:
+- Use dark royal backgrounds.
+- Use gold borders and dividers.
+- Use premium card shadows.
+- Add subtle ornamental background patterns.
+- Add simple line icons: home, shield, heart, phone, dove/candle if available.
+- Use clean spacing.
+- Avoid clutter.
+- Keep the website calm and elegant.
+Deliverables:
+- A complete React one-page website.
+- Fully responsive layout.
+- Modern premium royal design.
+- Editable pricing and plan data.
+- WhatsApp and call buttons.
+- SEO-ready structure.
+- Clean component structure.
+- No fake information.
+- Use only the facts provided above.
+
+Add this instruction at the end if the builder tends to over-design:
+
+Important: Do not create a generic funeral template. This must feel like a premium South African funeral cover brand with black, gold, royal green, elegant typography, and a clear family-support message. Keep it modern, simple, dignified, and easy to maintain.
