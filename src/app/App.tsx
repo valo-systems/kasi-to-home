@@ -628,7 +628,7 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
         )}
 
         <a
-          href={contactInfo.whatsapp}
+          href={`https://wa.me/27782613861?text=${encodeURIComponent(`Hi, I'd like to enquire about the *${plan.name}* (R${plan.premium}/month) from Kasi to Home Funeral Services. Please send me more information.`)}`}
           target="_blank"
           rel="noopener noreferrer"
           className="mt-auto w-full py-3 rounded text-sm font-medium text-center transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
@@ -638,7 +638,7 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
               : { border: `1px solid rgba(201,164,76,0.35)`, color: GOLD }
           }
         >
-          Ask about this plan
+          Ask about the {plan.name}
         </a>
       </div>
     </motion.div>
