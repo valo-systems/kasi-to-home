@@ -137,20 +137,20 @@ const page1 = `
 // ─── Page 2: Plans ────────────────────────────────────────────────────────────
 const plans = [
   {
-    name: "Excel Plan", premium: "R167", monument: "Gravemaker", highlight: false,
-    benefits: ["Flatlid coffin", "Hearse and 1 family car", "Tent and 50 chairs", "1 toilet · 2 tables", "Vegetables · A2 photo"],
+    name: "Excel Plan", premium: "R167", monument: "", highlight: false,
+    benefits: ["Dutch Casket Range", "Hearse and 1 family car", "Tent and 50 chairs", "2 tables", "Vegetables · A2 photo"],
   },
   {
-    name: "Delta Plan", premium: "R210", monument: "Gravemaker", highlight: false,
-    benefits: ["Open face square casket", "Hearse and 2 family cars", "Tent and 50 chairs", "Groceries and vegetables · A2 photo"],
+    name: "Delta Plan", premium: "R210", monument: "", highlight: false,
+    benefits: ["4 Tier Casket", "Hearse and 2 family cars", "Tent and 50 chairs", "1 toilet · 2 tables", "Groceries + vegetables · A2 photo"],
   },
   {
-    name: "Classic Plan", premium: "R291", monument: "Headstone", highlight: false,
-    benefits: ["Kiaat Mini Dome coffin + spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "Groceries · A2 photo · 1× Flowers", "Grave marker"],
+    name: "Classic Plan", premium: "R291", monument: "", highlight: false,
+    benefits: ["Half View Casket · Coffin Spray", "Hearse and 3 family cars", "7×12 tent and 100 chairs", "1 toilet · 4 tables", "Groceries + vegetables · A2 photo", "1 × Flowers"],
   },
   {
-    name: "Blue Plan", premium: "R470", monument: "Headstone", highlight: true,
-    benefits: ["Kiaat Standard Dome coffin + spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "Groceries · A2 photo · 2× Flowers", "Grave marker"],
+    name: "Blue Plan", premium: "R470", monument: "", highlight: true,
+    benefits: ["Dome Range Casket · Coffin Spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet · 4 tables", "Groceries + vegetables · A2 photo", "2 × Flowers", "R1,000 cashback"],
   },
 ];
 
@@ -162,7 +162,7 @@ function planCard(p) {
       ${p.highlight ? `<div style="background:linear-gradient(90deg,${GOLD},#A87B24); color:${BLACK}; font-size:7.5px; letter-spacing:0.18em; text-transform:uppercase; text-align:center; border-radius:4px; padding:3px 8px; margin-bottom:8px; font-weight:600;">Full Family Cover</div>` : ""}
       <div style="display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:3px;">
         <p style="font-size:8.5px; letter-spacing:0.18em; text-transform:uppercase; color:${GOLD};">${p.name}</p>
-        <span style="font-size:7.5px; color:rgba(247,241,229,0.55); border:1px solid ${GOLD}25; border-radius:20px; padding:1px 7px; background:${GOLD}08;">${p.monument}</span>
+        ${p.monument ? `<span style="font-size:7.5px; color:rgba(247,241,229,0.55); border:1px solid ${GOLD}25; border-radius:20px; padding:1px 7px; background:${GOLD}08;">${p.monument}</span>` : ""}
       </div>
       <p class="serif" style="font-size:22px; font-weight:600; color:${CREAM}; line-height:1; margin-bottom:8px;">${p.premium}<span style="font-size:11px; color:${GOLD}; font-family:Inter,sans-serif; font-weight:400;">/mo</span></p>
       <div style="height:1px; background:${GOLD}20; margin-bottom:8px;"></div>

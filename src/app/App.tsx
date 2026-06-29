@@ -35,8 +35,15 @@ const funeralPlans: FuneralPlan[] = [
     name: "Excel Plan", premium: 167, coverPeople: "6 people",
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
-    monument: "Gravemaker",
-    benefits: ["Flatlid coffin", "Hearse and 1 family car", "Tent and 50 chairs", "1 toilet", "2 tables", "Vegetables", "A2 photo"],
+    monument: "",
+    benefits: [
+      "Dutch Casket Range",
+      "Hearse and 1 family car",
+      "Tent and 50 chairs",
+      "2 tables",
+      "Vegetables",
+      "A2 Photo",
+    ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R15,000" },
       { label: "Children 14–21 years", amount: "R15,000" },
@@ -49,8 +56,16 @@ const funeralPlans: FuneralPlan[] = [
     name: "Delta Plan", premium: 210, coverPeople: "6 people",
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
-    monument: "Gravemaker",
-    benefits: ["Open face square casket", "Hearse and 2 family cars", "Tent and 50 chairs", "1 toilet", "2 tables", "Groceries and vegetables", "A2 photo"],
+    monument: "",
+    benefits: [
+      "4 Tier Casket",
+      "Hearse and 2 family cars",
+      "Tent and 50 chairs",
+      "1 toilet",
+      "2 tables",
+      "Groceries + vegetables",
+      "A2 Photo",
+    ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R20,000" },
       { label: "Children 14–21 years", amount: "R20,000" },
@@ -63,8 +78,18 @@ const funeralPlans: FuneralPlan[] = [
     name: "Classic Plan", premium: 291, coverPeople: "6 people",
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
-    monument: "Headstone",
-    benefits: ["Kiaat Mini Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "1× flowers"],
+    monument: "",
+    benefits: [
+      "Half View Casket",
+      "Coffin Spray",
+      "Hearse and 3 family cars",
+      "7×12 tent and 100 chairs",
+      "1 toilet",
+      "4 tables",
+      "Groceries + vegetables",
+      "A2 Photo",
+      "1 × Flowers",
+    ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R30,000" },
       { label: "Children 14–21 years", amount: "R30,000" },
@@ -77,9 +102,20 @@ const funeralPlans: FuneralPlan[] = [
     name: "Blue Plan", premium: 470, coverPeople: "6 people",
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
-    monument: "Headstone",
+    monument: "",
     highlight: true,
-    benefits: ["Kiaat Standard Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "2× flowers"],
+    benefits: [
+      "Dome Range Casket",
+      "Coffin Spray",
+      "Hearse and 4 family cars",
+      "7×12 tent and 100 chairs",
+      "1 toilet",
+      "4 tables",
+      "Groceries + vegetables",
+      "A2 Photo",
+      "2 × Flowers",
+      "R1,000 cashback",
+    ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R50,000" },
       { label: "Children 14–21 years", amount: "R50,000" },
@@ -779,96 +815,61 @@ function LegalSection() {
 // ─── Plan Card ───────────────────────────────────────────────────────────────
 
 function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
-  const [expanded, setExpanded] = useState(false);
-  const preview = plan.benefits.slice(0, 4);
-  const rest = plan.benefits.slice(4);
-
   return (
     <motion.div
-      {...fadeUp(index * 0.1)}
-      className="relative rounded-2xl border flex flex-col transition-all duration-300 hover:border-[#C9A44C]/50 group"
+      {...fadeUp(index * 0.08)}
+      className="relative rounded-xl overflow-hidden border flex flex-col"
       style={{
-        background: plan.highlight
-          ? `linear-gradient(160deg, #EAE4D4 0%, #E2DBCA 100%)`
-          : CARD,
-        borderColor: plan.highlight ? `rgba(201,164,76,0.45)` : `rgba(201,164,76,0.2)`,
+        borderColor: plan.highlight ? `rgba(201,164,76,0.5)` : `rgba(201,164,76,0.2)`,
+        background: CARD,
       }}
     >
-      {plan.highlight && (
-        <div
-          className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-medium uppercase tracking-widest"
-          style={{ background: `linear-gradient(90deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }}
-        >
-          Full Family Cover
-        </div>
-      )}
-
-      <div className="p-6 flex-1 flex flex-col">
-        <div className="mb-5">
-          <p className="font-serif text-xl font-semibold mb-1" style={{ color: INK }}>{plan.name}</p>
-          <p className="text-xs mb-3" style={{ color: "rgba(44,26,14,0.45)" }}>{plan.includes}</p>
-          <div className="flex items-center gap-2">
-            <span className="text-sm font-medium" style={{ color: GOLD }}>
-              R{plan.premium.toLocaleString()} / month
-            </span>
-          </div>
-        </div>
-
-        <div className="h-px mb-5" style={{ background: `rgba(201,164,76,0.15)` }} />
-
-        {/* Cover amounts */}
-        <div className="mb-5 space-y-1.5">
-          {plan.coverAmounts.map(({ label }) => (
-            <div key={label} className="flex items-center">
-              <span className="text-xs" style={{ color: "rgba(44,26,14,0.55)" }}>{label}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="h-px mb-5" style={{ background: `rgba(201,164,76,0.15)` }} />
-
-        {/* Benefits */}
-        <div className="space-y-2 mb-4 flex-1">
-          {preview.map((b) => (
-            <div key={b} className="flex items-start gap-2.5">
-              <Check size={12} className="mt-0.5 shrink-0" style={{ color: GOLD }} />
-              <span className="text-xs leading-snug" style={{ color: "rgba(44,26,14,0.7)" }}>{b}</span>
-            </div>
-          ))}
-          {expanded && rest.map((b) => (
-            <div key={b} className="flex items-start gap-2.5">
-              <Check size={12} className="mt-0.5 shrink-0" style={{ color: GOLD }} />
-              <span className="text-xs leading-snug" style={{ color: "rgba(44,26,14,0.7)" }}>{b}</span>
-            </div>
-          ))}
-        </div>
-
-        {rest.length > 0 && (
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-1.5 text-xs mb-5 transition-colors hover:opacity-80"
-            style={{ color: GOLD }}
-          >
-            <ChevronDown
-              size={12}
-              style={{ transform: expanded ? "rotate(180deg)" : "none", transition: "transform 0.2s" }}
-            />
-            {expanded ? "Show less" : `View all ${plan.benefits.length} benefits`}
-          </button>
+      {/* Gold header bar — matches PDF yellow header */}
+      <div
+        className="px-5 py-3 flex items-center justify-between"
+        style={{ background: `linear-gradient(90deg, ${GOLD}, ${GOLD_RICH})` }}
+      >
+        <span className="font-serif text-base font-bold italic" style={{ color: BLACK }}>{plan.name}</span>
+        {plan.highlight && (
+          <span className="text-xs font-medium uppercase tracking-wider px-2 py-0.5 rounded-full" style={{ background: "rgba(0,0,0,0.18)", color: BLACK }}>
+            Most Popular
+          </span>
         )}
+      </div>
+
+      <div className="p-5 flex flex-col flex-1 gap-4">
+        {/* Coverage & price */}
+        <div>
+          <p className="text-xs mb-1" style={{ color: "rgba(44,26,14,0.55)" }}>{plan.includes}</p>
+          <p className="font-serif text-xl font-semibold" style={{ color: GOLD }}>
+            R{plan.premium.toLocaleString()}<span className="text-sm font-normal" style={{ color: "rgba(44,26,14,0.5)" }}> / month</span>
+          </p>
+        </div>
+
+        <div className="h-px" style={{ background: `rgba(201,164,76,0.15)` }} />
+
+        {/* Benefits list — matches PDF benefit list style */}
+        <div className="flex-1 space-y-2">
+          {plan.benefits.map((b) => (
+            <div key={b} className="flex items-start gap-2.5">
+              <div className="mt-1.5 w-1.5 h-1.5 rounded-full shrink-0" style={{ background: GOLD }} />
+              <span className="text-sm leading-snug" style={{ color: INK }}>{b}</span>
+            </div>
+          ))}
+        </div>
 
         <a
           href={`https://wa.me/27782613861?text=${encodeURIComponent(`Hi, I'd like to enquire about the *${plan.name}* (R${plan.premium}/month) from Kasi 2 Home Funeral Services. Please send me more information.`)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="mt-auto w-full py-3 rounded text-sm font-medium text-center transition-all duration-200 hover:brightness-110 active:scale-[0.98]"
+          className="w-full py-3 rounded text-sm font-medium text-center transition-all duration-200 hover:brightness-110 active:scale-[0.98] mt-2"
           style={
             plan.highlight
               ? { background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }
               : { border: `1px solid rgba(201,164,76,0.35)`, color: GOLD }
           }
         >
-          Ask about the {plan.name}
+          Enquire about this plan
         </a>
       </div>
     </motion.div>
@@ -880,7 +881,7 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
 function PlansSection() {
   return (
     <section id="plans" className="py-24" style={{ background: CREAM }}>
-      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+      <div className="max-w-5xl mx-auto px-5 sm:px-8">
         <motion.div {...fadeUp(0)} className="mb-14">
           <SectionLabel>Funeral Plans</SectionLabel>
           <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: INK }}>
@@ -891,11 +892,16 @@ function PlansSection() {
           </p>
         </motion.div>
 
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {/* 2×2 grid matching the PDF layout */}
+        <div className="grid sm:grid-cols-2 gap-6">
           {funeralPlans.map((plan, i) => (
             <PlanCard key={plan.name} plan={plan} index={i} />
           ))}
         </div>
+
+        <motion.p {...fadeUp(0.2)} className="mt-8 text-xs text-center" style={{ color: "rgba(44,26,14,0.4)" }}>
+          All plans are subject to a needs analysis and underwriter approval. Premiums and benefits are subject to the official policy wording.
+        </motion.p>
       </div>
     </section>
   );
