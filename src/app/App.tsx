@@ -50,7 +50,7 @@ const funeralPlans: FuneralPlan[] = [
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
     monument: "Gravemaker",
-    benefits: ["Open face square casket", "Hearse and 2 family cars", "Tent and 50 chairs", "1 toilet", "2 tables", "Groceries and vegetables", "A2 photo", "Headstone"],
+    benefits: ["Open face square casket", "Hearse and 2 family cars", "Tent and 50 chairs", "1 toilet", "2 tables", "Groceries and vegetables", "A2 photo"],
     coverAmounts: [
       { label: "Member + spouse", amount: "R20,000" },
       { label: "Children 14–21 years", amount: "R20,000" },
@@ -64,7 +64,7 @@ const funeralPlans: FuneralPlan[] = [
     includes: "Member + spouse and 6 children",
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
     monument: "Headstone",
-    benefits: ["Kiaat Mini Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "Headstone", "Grave marker", "1× flowers"],
+    benefits: ["Kiaat Mini Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "1× flowers"],
     coverAmounts: [
       { label: "Member + spouse", amount: "R30,000" },
       { label: "Children 14–21 years", amount: "R30,000" },
@@ -79,7 +79,7 @@ const funeralPlans: FuneralPlan[] = [
     ageBand: "Member + spouse: 18–65 years; children: 0–21 years",
     monument: "Headstone",
     highlight: true,
-    benefits: ["Kiaat Standard Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "Headstone", "Grave marker", "2× flowers"],
+    benefits: ["Kiaat Standard Dome coffin", "Coffin spray", "Hearse and 4 family cars", "7×12 tent and 100 chairs", "1 toilet", "4 tables", "Groceries and vegetables", "A2 photo", "2× flowers"],
     coverAmounts: [
       { label: "Member + spouse", amount: "R50,000" },
       { label: "Children 14–21 years", amount: "R50,000" },
@@ -631,15 +631,9 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
         <div className="mb-5">
           <p className="font-serif text-xl font-semibold mb-1" style={{ color: INK }}>{plan.name}</p>
           <p className="text-xs mb-3" style={{ color: "rgba(44,26,14,0.45)" }}>{plan.includes}</p>
-          <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2">
             <span className="text-sm font-medium" style={{ color: GOLD }}>
               R{plan.premium.toLocaleString()} / month
-            </span>
-            <span
-              className="text-xs px-2 py-0.5 rounded-full border"
-              style={{ color: "rgba(44,26,14,0.6)", borderColor: `rgba(201,164,76,0.2)`, background: `rgba(201,164,76,0.06)` }}
-            >
-              {plan.monument}
             </span>
           </div>
         </div>
@@ -648,10 +642,9 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
 
         {/* Cover amounts */}
         <div className="mb-5 space-y-1.5">
-          {plan.coverAmounts.map(({ label, amount }) => (
-            <div key={label} className="flex items-center justify-between">
+          {plan.coverAmounts.map(({ label }) => (
+            <div key={label} className="flex items-center">
               <span className="text-xs" style={{ color: "rgba(44,26,14,0.55)" }}>{label}</span>
-              <span className="text-xs font-medium" style={{ color: GOLD }}>{amount}</span>
             </div>
           ))}
         </div>
