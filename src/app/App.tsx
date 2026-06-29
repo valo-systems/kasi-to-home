@@ -169,6 +169,13 @@ const policyItems = [
     content: ["Yes. You may cancel your policy with one month's notice — no penalties."],
   },
   {
+    title: "What is the cooling-off period?",
+    content: [
+      "You have the right to cancel your policy within 30 days of inception without any penalty, provided no claim has been submitted during that period.",
+      "This is a statutory right under the Policyholder Protection Rules. Simply contact us and we will process the cancellation and refund any premiums paid.",
+    ],
+  },
+  {
     title: "Are there any exclusions I should know about?",
     content: [
       "Suicide within the first 12 months of the policy.",
@@ -223,6 +230,7 @@ const navLinks = [
   { label: "Plans", href: "#plans" },
   { label: "Benefits", href: "#benefits" },
   { label: "Underwriter", href: "#underwriter" },
+  { label: "Legal", href: "#legal" },
   { label: "Contact", href: "#contact" },
 ];
 
@@ -595,6 +603,174 @@ function AboutSection() {
             </div>
           </motion.div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Our Process ─────────────────────────────────────────────────────────────
+
+const processSteps = [
+  {
+    number: "01",
+    title: "Identity Verification",
+    description: "We verify your identity and address documents in line with FICA (Financial Intelligence Centre Act) requirements, including KYC and anti-money laundering checks.",
+  },
+  {
+    number: "02",
+    title: "Needs Analysis",
+    description: "We gather information about your income, dependants, and existing cover to understand your financial situation and long-term goals before recommending any product.",
+  },
+  {
+    number: "03",
+    title: "Product Suitability",
+    description: "We match you to a plan that fits your needs and affordability. We never recommend unnecessary cover or duplicate policies.",
+  },
+  {
+    number: "04",
+    title: "Full Disclosure",
+    description: "We explain all policy terms, benefits, exclusions, costs, and risks in plain language before you sign anything — in line with FAIS and Policyholder Protection Rules.",
+  },
+  {
+    number: "05",
+    title: "Sign-Off & Documentation",
+    description: "We obtain your signed consent and advice records, and securely store all documentation for compliance and your own records.",
+  },
+];
+
+function OurProcessSection() {
+  return (
+    <section className="py-24" style={{ background: `linear-gradient(160deg, #EDE7D8 0%, #E5DDD0 100%)` }}>
+      <div className="max-w-7xl mx-auto px-5 sm:px-8">
+        <motion.div {...fadeUp(0)} className="mb-14">
+          <SectionLabel>How We Work</SectionLabel>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: INK }}>
+            Our process, step by step.
+          </h2>
+          <p className="mt-3 text-sm max-w-xl" style={{ color: "rgba(44,26,14,0.55)" }}>
+            Every client goes through a structured, regulated onboarding process to ensure the right cover is recommended for your family's specific needs.
+          </p>
+        </motion.div>
+
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {processSteps.map((step, i) => (
+            <motion.div
+              key={step.number}
+              {...fadeUp(i * 0.08)}
+              className="rounded-2xl p-7 border flex flex-col gap-4"
+              style={{ background: "rgba(237,231,216,0.9)", borderColor: `rgba(201,164,76,0.2)` }}
+            >
+              <span className="font-serif text-3xl font-bold" style={{ color: `rgba(201,164,76,0.35)` }}>
+                {step.number}
+              </span>
+              <div>
+                <p className="font-serif text-lg font-semibold mb-2" style={{ color: INK }}>{step.title}</p>
+                <p className="text-sm leading-relaxed" style={{ color: "rgba(44,26,14,0.65)" }}>{step.description}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ─── Legal & Compliance ───────────────────────────────────────────────────────
+
+const legalItems = [
+  {
+    title: "Disclaimer",
+    content: [
+      "Kasi 2 Home Funeral Services acts as an intermediary and is not itself a licensed insurer. All policies are underwritten by Atlehang Life (Pty) Ltd, FSP 51568, a licensed micro-insurer regulated by the Financial Sector Conduct Authority (FSCA).",
+      "The information on this website is provided for general guidance only and does not constitute financial advice. A formal needs analysis will be conducted before any product is recommended to you.",
+      "Benefits, premiums, and policy terms are subject to the official policy wording. Please ensure you read and understand all terms before accepting cover.",
+    ],
+  },
+  {
+    title: "Treating Customers Fairly (TCF)",
+    content: [
+      "Kasi 2 Home Funeral Services is committed to the six TCF outcomes as required by the FSCA:",
+      "Customers can be confident they are dealing with a provider where fair treatment is central to our culture.",
+      "Products and services are designed to meet the needs of the identified target market.",
+      "Customers receive clear, timely, and accurate information before, during, and after the point of sale.",
+      "Advice is suitable and takes into account each customer's individual circumstances.",
+      "Products perform as we have led customers to expect.",
+      "Customers do not face unreasonable barriers when making a claim or complaint.",
+    ],
+  },
+  {
+    title: "POPIA — How We Handle Your Personal Information",
+    content: [
+      "Kasi 2 Home Funeral Services processes your personal information in accordance with the Protection of Personal Information Act, 4 of 2013 (POPIA).",
+      "We collect only the information necessary to provide you with funeral cover services, conduct FICA verification, and comply with our regulatory obligations.",
+      "Your information is stored securely and is not shared with third parties other than Atlehang Life (our underwriter) and regulatory bodies where required by law.",
+      "You have the right to access, correct, or request deletion of your personal information. To exercise these rights, contact us at info@kasitohomefunerals.co.za.",
+    ],
+  },
+  {
+    title: "Conflict of Interest Disclosure",
+    content: [
+      "Kasi 2 Home Funeral Services maintains a Conflict of Interest Management Policy in line with the FAIS General Code of Conduct.",
+      "Our representatives are required to identify and disclose any actual or potential conflicts of interest to clients before providing advice or intermediary services.",
+      "We do not accept gifts, commissions, or incentives that could compromise the objectivity of advice given to clients.",
+    ],
+  },
+  {
+    title: "Complaints",
+    content: [
+      "If you are dissatisfied with our service or advice, please contact us directly at info@kasitohomefunerals.co.za so we can resolve your complaint promptly.",
+      "If your complaint is not resolved to your satisfaction, you may escalate it to the FAIS Ombud (www.faisombud.co.za) or the Short-term Insurance Ombud, depending on the nature of your complaint.",
+      "We are committed to handling all complaints fairly, transparently, and within a reasonable timeframe.",
+    ],
+  },
+];
+
+function LegalSection() {
+  return (
+    <section id="legal" className="py-24" style={{ background: CREAM }}>
+      <div className="max-w-3xl mx-auto px-5 sm:px-8">
+        <motion.div {...fadeUp(0)} className="mb-12">
+          <SectionLabel>Legal & Compliance</SectionLabel>
+          <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: INK }}>
+            Regulated, transparent, and accountable.
+          </h2>
+          <p className="mt-3 text-sm max-w-xl" style={{ color: "rgba(44,26,14,0.55)" }}>
+            As an authorised intermediary under FAIS, we are required to provide you with the following disclosures.
+          </p>
+        </motion.div>
+
+        <motion.div {...fadeUp(0.1)}>
+          <Accordion.Root type="single" collapsible className="space-y-3">
+            {legalItems.map((item, i) => (
+              <Accordion.Item
+                key={item.title}
+                value={`legal-${i}`}
+                className="rounded-xl border overflow-hidden"
+                style={{ background: CARD, borderColor: `rgba(201,164,76,0.18)` }}
+              >
+                <Accordion.Trigger className="w-full flex items-center justify-between px-6 py-4 text-left group">
+                  <span className="font-medium text-sm" style={{ color: INK }}>{item.title}</span>
+                  <ChevronDown
+                    size={16}
+                    style={{ color: GOLD, flexShrink: 0, transition: "transform 0.25s" }}
+                    className="group-data-[state=open]:rotate-180"
+                  />
+                </Accordion.Trigger>
+                <Accordion.Content className="overflow-hidden data-[state=open]:animate-none">
+                  <div className="px-6 pb-5 space-y-2">
+                    <div className="h-px mb-4" style={{ background: `rgba(201,164,76,0.12)` }} />
+                    {item.content.map((line, j) => (
+                      <div key={j} className="flex items-start gap-3">
+                        <div className="w-1 h-1 rounded-full mt-2 shrink-0" style={{ background: GOLD }} />
+                        <p className="text-sm leading-relaxed" style={{ color: "rgba(44,26,14,0.65)" }}>{line}</p>
+                      </div>
+                    ))}
+                  </div>
+                </Accordion.Content>
+              </Accordion.Item>
+            ))}
+          </Accordion.Root>
+        </motion.div>
       </div>
     </section>
   );
@@ -1079,8 +1255,11 @@ function ContactSection() {
             <h2 className="font-serif text-3xl sm:text-4xl font-semibold mb-5" style={{ color: INK }}>
               You don't have to face this alone.
             </h2>
-            <p className="text-base leading-relaxed mb-10" style={{ color: "rgba(44,26,14,0.65)" }}>
+            <p className="text-base leading-relaxed mb-6" style={{ color: "rgba(44,26,14,0.65)" }}>
               Whether you are planning ahead or need urgent family support, Kasi 2 Home Funeral Services is here to guide you from the first call to the final farewell.
+            </p>
+            <p className="text-xs mb-10 leading-relaxed" style={{ color: "rgba(44,26,14,0.4)" }}>
+              By contacting us, you consent to the processing of your personal information in accordance with POPIA for the purpose of providing you with funeral cover services. View our full privacy notice under Legal &amp; Compliance above.
             </p>
 
             <div className="space-y-4">
@@ -1300,11 +1479,13 @@ export default function App() {
         <Hero />
         <TrustStrip />
         <AboutSection />
+        <OurProcessSection />
         <PlansSection />
         <BenefitsSection />
         <CoverOptionsSection />
         <UnderwriterSection />
         <PolicyAccordionSection />
+        <LegalSection />
         <ContactSection />
       </main>
       <Footer />
