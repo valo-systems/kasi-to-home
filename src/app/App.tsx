@@ -249,7 +249,7 @@ function Header() {
         {/* Logo */}
         <a href="#home" className="flex items-center gap-3 shrink-0">
           <img src={logoImg} alt="Kasi 2 Home logo" className="w-8 h-8 rounded object-cover" />
-          <span className="hidden sm:block text-sm font-medium tracking-wide" style={{ color: INK }}>
+          <span className="hidden sm:block text-sm font-medium tracking-wide" style={{ color: scrolled ? INK : "rgba(247,241,229,0.95)" }}>
             Kasi 2 Home
           </span>
         </a>
@@ -260,8 +260,8 @@ function Header() {
             <a
               key={l.href}
               href={l.href}
-              className="text-sm transition-colors duration-200 hover:text-white"
-              style={{ color: "rgba(44,26,14,0.65)" }}
+              className="text-sm transition-colors duration-200"
+              style={{ color: scrolled ? "rgba(44,26,14,0.65)" : "rgba(247,241,229,0.85)" }}
             >
               {l.label}
             </a>
@@ -282,7 +282,7 @@ function Header() {
           </a>
           <button
             className="lg:hidden p-2 rounded"
-            style={{ color: INK }}
+            style={{ color: scrolled ? INK : CREAM }}
             onClick={() => setOpen(!open)}
             aria-label="Toggle menu"
           >
