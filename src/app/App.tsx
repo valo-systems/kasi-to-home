@@ -43,6 +43,7 @@ const funeralPlans: FuneralPlan[] = [
       "2 tables",
       "Vegetables",
       "A2 Photo",
+      "Grave Marker",
     ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R15,000" },
@@ -65,6 +66,7 @@ const funeralPlans: FuneralPlan[] = [
       "2 tables",
       "Groceries + vegetables",
       "A2 Photo",
+      "Grave Marker",
     ],
     coverAmounts: [
       { label: "Member + spouse", amount: "R20,000" },
@@ -88,6 +90,7 @@ const funeralPlans: FuneralPlan[] = [
       "4 tables",
       "Groceries + vegetables",
       "A2 Photo",
+      "Headstone",
       "1 × Flowers",
     ],
     coverAmounts: [
@@ -113,6 +116,7 @@ const funeralPlans: FuneralPlan[] = [
       "4 tables",
       "Groceries + vegetables",
       "A2 Photo",
+      "Headstone",
       "2 × Flowers",
       "R1,000 cashback",
     ],
@@ -878,26 +882,198 @@ function PlanCard({ plan, index }: { plan: FuneralPlan; index: number }) {
 
 // ─── Plans Section ───────────────────────────────────────────────────────────
 
+type CompareCell = string | boolean;
+interface CompareDataRow { type: "data"; label: string; values: CompareCell[]; }
+interface CompareDivider { type: "divider"; }
+type CompareRow = CompareDataRow | CompareDivider;
+
+// R10k is cash-only — prepended as first column in compare view
+const comparePlanHeaders = [
+  { name: "R10k*", sub: "from R72/mo", highlight: false, cashOnly: true, href: `https://wa.me/27782613861?text=${encodeURIComponent("Hi, I'd like to enquire about the R10k cash plan from Kasi 2 Home Funeral Services.")}` },
+  ...funeralPlans.map((p) => ({
+    name: p.name.replace(" Plan", ""),
+    sub: `R${p.premium}/mo`,
+    highlight: !!p.highlight,
+    cashOnly: false,
+    href: `https://wa.me/27782613861?text=${encodeURIComponent(`Hi, I'd like to enquire about the *${p.name}* (R${p.premium}/month) from Kasi 2 Home Funeral Services. Please send me more information.`)}`,
+  })),
+];
+
+const compareRows: CompareRow[] = [
+  { type: "data", label: "Cover (member / spouse)", values: ["R10,000 cash", "R15,000", "R20,000", "R30,000", "R50,000"] },
+  { type: "divider" },
+  { type: "data", label: "Casket", values: [false, "Dutch Range", "4 Tier", "Half View", "Dome Range"] },
+  { type: "data", label: "Coffin Spray", values: [false, false, false, true, true] },
+  { type: "data", label: "Hearse", values: [false, true, true, true, true] },
+  { type: "data", label: "Family Cars", values: [false, "1 car", "2 cars", "3 cars", "4 cars"] },
+  { type: "divider" },
+  { type: "data", label: "Tent & Chairs", values: [false, "50 chairs", "50 chairs", "100 chairs", "100 chairs"] },
+  { type: "data", label: "Tables", values: [false, "2", "2", "4", "4"] },
+  { type: "data", label: "Portable Toilet", values: [false, false, true, true, true] },
+  { type: "divider" },
+  { type: "data", label: "Food", values: [false, "Vegetables", "Groceries + veg", "Groceries + veg", "Groceries + veg"] },
+  { type: "data", label: "A2 Photo Frame", values: [false, true, true, true, true] },
+  { type: "data", label: "Grave Marker", values: [false, true, true, false, false] },
+  { type: "data", label: "Headstone", values: [false, false, false, true, true] },
+  { type: "data", label: "Flowers", values: [false, false, false, "1 bouquet", "2 bouquets"] },
+  { type: "data", label: "R1,000 Cashback", values: [false, false, false, false, true] },
+];
+
+function CompareTable() {
+  const colSpan = comparePlanHeaders.length + 1;
+  return (
+    <div>
+      <div className="overflow-x-auto rounded-xl border" style={{ borderColor: `rgba(201,164,76,0.3)` }}>
+        <table className="w-full text-sm border-collapse min-w-[640px]">
+          <thead>
+            <tr>
+              <th
+                className="py-3 px-4 text-left text-xs font-medium"
+                style={{ background: CARD, color: "rgba(44,26,14,0.45)", width: "28%", borderBottom: `1px solid rgba(201,164,76,0.2)` }}
+              >
+                Features
+              </th>
+              {comparePlanHeaders.map((plan) => (
+                <th
+                  key={plan.name}
+                  className="py-3 px-3 text-center"
+                  style={{
+                    background: plan.highlight ? `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})` : CARD,
+                    color: plan.highlight ? BLACK : INK,
+                    borderBottom: `1px solid rgba(201,164,76,0.2)`,
+                    borderLeft: `1px solid rgba(201,164,76,0.15)`,
+                  }}
+                >
+                  <div className="font-serif font-bold text-sm">{plan.name}</div>
+                  <div className="text-xs font-normal mt-0.5" style={{ opacity: 0.7 }}>{plan.sub}</div>
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {compareRows.map((row, i) => {
+              if (row.type === "divider") {
+                return (
+                  <tr key={`div-${i}`}>
+                    <td colSpan={colSpan} style={{ height: 4, background: `rgba(201,164,76,0.08)` }} />
+                  </tr>
+                );
+              }
+              const even = i % 2 === 0;
+              return (
+                <tr key={row.label} style={{ background: even ? `rgba(237,231,216,0.6)` : CREAM }}>
+                  <td
+                    className="py-2.5 px-4 text-xs"
+                    style={{ color: "rgba(44,26,14,0.65)", borderRight: `1px solid rgba(201,164,76,0.12)` }}
+                  >
+                    {row.label}
+                  </td>
+                  {row.values.map((val, vi) => (
+                    <td
+                      key={vi}
+                      className="py-2.5 px-3 text-center text-xs"
+                      style={{ color: INK, borderLeft: `1px solid rgba(201,164,76,0.1)` }}
+                    >
+                      {val === true ? (
+                        <Check className="w-3.5 h-3.5 mx-auto" style={{ color: GOLD }} strokeWidth={2.5} />
+                      ) : val === false ? (
+                        <span style={{ color: "rgba(44,26,14,0.2)" }}>—</span>
+                      ) : (
+                        <span style={{ color: INK }}>{val}</span>
+                      )}
+                    </td>
+                  ))}
+                </tr>
+              );
+            })}
+            {/* Enquire row */}
+            <tr>
+              <td className="py-4 px-4 text-xs" style={{ background: CARD, color: "rgba(44,26,14,0.4)", borderTop: `1px solid rgba(201,164,76,0.15)` }}>
+                Get a quote
+              </td>
+              {comparePlanHeaders.map((plan) => (
+                <td
+                  key={plan.name}
+                  className="py-4 px-3 text-center"
+                  style={{ background: CARD, borderTop: `1px solid rgba(201,164,76,0.15)`, borderLeft: `1px solid rgba(201,164,76,0.1)` }}
+                >
+                  <a
+                    href={plan.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block py-1.5 px-3 rounded text-xs font-medium transition-all hover:brightness-110 active:scale-95"
+                    style={
+                      plan.highlight
+                        ? { background: `linear-gradient(135deg, ${GOLD}, ${GOLD_RICH})`, color: BLACK }
+                        : { border: `1px solid rgba(201,164,76,0.4)`, color: GOLD }
+                    }
+                  >
+                    Enquire
+                  </a>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p className="mt-3 text-xs" style={{ color: "rgba(44,26,14,0.4)" }}>
+        * R10k is a cash payout only — no funeral services are included.
+      </p>
+    </div>
+  );
+}
+
 function PlansSection() {
+  const [view, setView] = useState<"cards" | "compare">("cards");
+
   return (
     <section id="plans" className="py-24" style={{ background: CREAM }}>
       <div className="max-w-5xl mx-auto px-5 sm:px-8">
-        <motion.div {...fadeUp(0)} className="mb-14">
+        <motion.div {...fadeUp(0)} className="mb-10">
           <SectionLabel>Funeral Plans</SectionLabel>
-          <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: INK }}>
-            Honour your loved one with dignity.
-          </h2>
-          <p className="mt-3 text-sm max-w-xl" style={{ color: "rgba(44,26,14,0.55)" }}>
-            Each plan covers the member, spouse, and up to 6 children — everything your family needs to say goodbye with care and respect.
-          </p>
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+            <div>
+              <h2 className="font-serif text-3xl sm:text-4xl font-semibold" style={{ color: INK }}>
+                Honour your loved one with dignity.
+              </h2>
+              <p className="mt-3 text-sm max-w-xl" style={{ color: "rgba(44,26,14,0.55)" }}>
+                Each plan covers the member, spouse, and up to 6 children — everything your family needs to say goodbye with care and respect.
+              </p>
+            </div>
+            {/* View toggle */}
+            <div
+              className="flex rounded-lg overflow-hidden border shrink-0 self-start sm:self-auto"
+              style={{ borderColor: `rgba(201,164,76,0.35)` }}
+            >
+              {(["cards", "compare"] as const).map((v) => (
+                <button
+                  key={v}
+                  onClick={() => setView(v)}
+                  className="px-4 py-2 text-xs font-medium transition-all"
+                  style={
+                    view === v
+                      ? { background: GOLD, color: BLACK }
+                      : { background: "transparent", color: GOLD }
+                  }
+                >
+                  {v === "cards" ? "Plans" : "Compare"}
+                </button>
+              ))}
+            </div>
+          </div>
         </motion.div>
 
-        {/* 2×2 grid matching the PDF layout */}
-        <div className="grid sm:grid-cols-2 gap-6">
-          {funeralPlans.map((plan, i) => (
-            <PlanCard key={plan.name} plan={plan} index={i} />
-          ))}
-        </div>
+        {view === "cards" ? (
+          <div className="grid sm:grid-cols-2 gap-6">
+            {funeralPlans.map((plan, i) => (
+              <PlanCard key={plan.name} plan={plan} index={i} />
+            ))}
+          </div>
+        ) : (
+          <motion.div {...fadeUp(0)}>
+            <CompareTable />
+          </motion.div>
+        )}
 
         <motion.p {...fadeUp(0.2)} className="mt-8 text-xs text-center" style={{ color: "rgba(44,26,14,0.4)" }}>
           All plans are subject to a needs analysis and underwriter approval. Premiums and benefits are subject to the official policy wording.
