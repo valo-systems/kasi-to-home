@@ -1066,7 +1066,7 @@ function CoverOptionsSection() {
                 <thead>
                   <tr style={{ borderBottom: `1px solid rgba(201,164,76,0.15)` }}>
                     <th className="text-left px-6 py-4 text-xs uppercase tracking-widest font-medium" style={{ color: GOLD }}>Age Band</th>
-                    {["R10,000*", "R15,000", "R20,000", "R30,000", "R50,000"].map(h => (
+                    {["R10k*", "Excel", "Delta", "Classic", "Blue"].map(h => (
                       <th key={h} className="text-right px-4 py-4 text-xs uppercase tracking-widest font-medium" style={{ color: GOLD }}>{h}</th>
                     ))}
                   </tr>
@@ -1318,12 +1318,21 @@ function ContactSection() {
                 icon: Mail,
                 primary: false,
               },
-            ].map(({ label, sub, href, icon: Icon, primary, external }) => (
+              {
+                label: "Download Intake Form",
+                sub: "Client application form (PDF)",
+                href: "/kasi-2-home-client-form.pdf",
+                icon: FileText,
+                primary: false,
+                download: true,
+              },
+            ].map(({ label, sub, href, icon: Icon, primary, external, download }) => (
               <a
                 key={label}
                 href={href}
                 target={external ? "_blank" : undefined}
                 rel={external ? "noopener noreferrer" : undefined}
+                download={download ? "Kasi-2-Home-Client-Intake-Form.pdf" : undefined}
                 className="flex items-center gap-4 p-5 rounded-xl border transition-all duration-200 group hover:border-[#C9A44C]/50"
                 style={
                   primary
